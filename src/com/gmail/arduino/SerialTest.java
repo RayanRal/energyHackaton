@@ -1,4 +1,4 @@
-package com.gmail;
+package com.gmail.arduino;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;

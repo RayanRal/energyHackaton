@@ -1,4 +1,4 @@
-package com.gmail;
+package com.gmail.arduino;
 
 /**
  * Created by rayanral on 14/03/15.
