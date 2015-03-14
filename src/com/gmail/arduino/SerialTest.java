@@ -1,15 +1,22 @@
 package com.gmail.arduino;
 
+import com.gmail.ui.Controller;
+import com.gmail.ui.Main;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
+import javafx.event.Event;
+import javafx.event.EventTarget;
+import javafx.scene.image.ImageView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.OptionalDouble;
+import java.util.Random;
 
 /**
  * Created by rayanral on 14/03/15.
@@ -17,6 +24,7 @@ import java.util.Enumeration;
 public class SerialTest implements SerialPortEventListener {
 
     SerialPort serialPort;
+    ImageView imageView;
     /**
      * The port we're normally going to use.
      */
@@ -44,6 +52,10 @@ public class SerialTest implements SerialPortEventListener {
      * Default bits per second for COM port.
      */
     private static final int DATA_RATE = 9600;
+
+    public SerialTest(ImageView imageView) {
+        this.imageView = imageView;
+    }
 
     public void initialize() {
         // the next line is for Raspberry Pi and
@@ -111,13 +123,21 @@ public class SerialTest implements SerialPortEventListener {
         // Ignore all the other eventTypes, but you should consider the other ones.
     }
 
+    public void serialEvent() {
+        processInput();
+    }
+
     private void processInput() {
         try {
-            String inputLine = input.readLine();
-            String[] strings = inputLine.split(".");
-            Float value = Float.valueOf(strings[0]);
-            System.out.println(inputLine);
-        } catch (IOException e) {
+//            String inputLine = input.readLine();
+            float nextFloat = new Random().nextFloat();
+            System.out.println(nextFloat);
+//            String[] strings = inputLine.split(".");
+//            Float value = Float.valueOf(strings[0]);
+//            Float value = Float.valueOf(inputLine);
+            Event.fireEvent(imageView, new InputEvent(nextFloat * 100));
+//            System.out.println(inputLine);
+//        } catch (IOException e) {
         } catch (Exception e) {
             System.err.println(e.toString());
         }
