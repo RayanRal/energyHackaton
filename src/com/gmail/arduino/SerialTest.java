@@ -8,7 +8,9 @@ import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import javafx.event.Event;
 import javafx.event.EventTarget;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +27,7 @@ public class SerialTest implements SerialPortEventListener {
 
     SerialPort serialPort;
     ImageView imageView;
+    Text textField;
     /**
      * The port we're normally going to use.
      */
@@ -53,8 +56,9 @@ public class SerialTest implements SerialPortEventListener {
      */
     private static final int DATA_RATE = 9600;
 
-    public SerialTest(ImageView imageView) {
+    public SerialTest(ImageView imageView, Text textField) {
         this.imageView = imageView;
+        this.textField = textField;
     }
 
     public void initialize() {
@@ -136,6 +140,7 @@ public class SerialTest implements SerialPortEventListener {
 //            Float value = Float.valueOf(strings[0]);
 //            Float value = Float.valueOf(inputLine);
             Event.fireEvent(imageView, new InputEvent(nextFloat * 100));
+            Event.fireEvent(textField, new InputEvent(nextFloat * 100));
 //            System.out.println(inputLine);
 //        } catch (IOException e) {
         } catch (Exception e) {

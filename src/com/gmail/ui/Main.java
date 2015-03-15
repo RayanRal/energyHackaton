@@ -3,6 +3,7 @@ package com.gmail.ui;
 import com.gmail.arduino.InputEvent;
 import com.gmail.arduino.SerialTest;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
@@ -43,10 +44,12 @@ public class Main extends Application {
         Text textField = new Text();
         textField.setText("Initial");
         textField.addEventHandler(EventType.ROOT, event -> {
-            if(event instanceof InputEvent) {
-                textField.setText(((InputEvent) event).getValue().toString());
-                event.consume();
-            }
+            Platform.runLater(() -> {
+                if(event instanceof InputEvent) {
+                    textField.setText(((InputEvent) event).getValue().toString());
+                    event.consume();
+                }
+            });
         });
         return textField;
     }
@@ -58,11 +61,12 @@ public class Main extends Application {
         iv1.setPreserveRatio(true);
         iv1.setSmooth(true);
         iv1.addEventHandler(EventType.ROOT, event -> {
-            if(event instanceof InputEvent) {
-                iv1.setImage(getImage(((InputEvent) event).getValue()));
-                Event.fireEvent(textField, event);
-                event.consume();
-            }
+            Platform.runLater(() -> {
+                if(event instanceof InputEvent) {
+                    iv1.setImage(getImage(((InputEvent) event).getValue()));
+                    event.consume();
+                }
+            });
         });
         return iv1;
     }
@@ -77,7 +81,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        SerialTest main = new SerialTest(imageView);
+        SerialTest main = new SerialTest(imageView, textField);
         main.initialize();
         Thread t = new Thread() {
             public void run() {
@@ -107,7 +111,7 @@ public class Main extends Application {
             for(int i = 0; i < 10; i ++) {
                 main.serialEvent();
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
