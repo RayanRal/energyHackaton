@@ -43,7 +43,7 @@ public class Main extends Application {
         tabPane.getTabs().addAll(mainTab, secondaryTableTab);
         root.getChildren().add(borderPane);
 
-        primaryStage.setTitle("SmartTE");
+        primaryStage.setTitle("MoneyMonitor");
         primaryStage.setScene(scene);
 
         HBox mainHorizontalBox = new HBox();
@@ -63,10 +63,24 @@ public class Main extends Application {
 
     private Tab createCheckboxTab() {
         Tab secondaryTableTab = new Tab("Checkbox");
-        HBox horizontalCheckboxBox = new HBox(30);
+        HBox horizontalCheckboxBox = new HBox(5);
+        ImageView imageView1 = new ImageView(new Image(Main.class.getResourceAsStream("/25.png")));
+        imageView1.setFitWidth(150);
+        imageView1.setPreserveRatio(true);
+        imageView1.setSmooth(true);
+        imageView1.setRotate(270);
+
+        ImageView imageView2 = new ImageView(new Image(Main.class.getResourceAsStream("/75.png")));
+        imageView2.setFitWidth(150);
+        imageView2.setPreserveRatio(true);
+        imageView2.setSmooth(true);
+        imageView2.setRotate(270);
+
+        horizontalCheckboxBox.getChildren().addAll(imageView1, imageView2);
         horizontalCheckboxBox.setAlignment(Pos.CENTER);
 
-        horizontalCheckboxBox.getChildren().addAll(new CheckBox("Lower radiator temperature by 1° (6% economy)"));
+
+        horizontalCheckboxBox.getChildren().addAll(new CheckBox("Lower radiator\n temperature by 1°\n (6% economy)"));
         secondaryTableTab.setContent(horizontalCheckboxBox);
         return secondaryTableTab;
     }
@@ -74,42 +88,36 @@ public class Main extends Application {
     private static Text getCurrentCounterText() {
         Text textField = new Text();
         textField.setText("\n\nCurrent counter: ");
-        textField.addEventHandler(EventType.ROOT, event -> {
-            Platform.runLater(() -> {
-                if (event instanceof InputEvent) {
-                    textField.setText("\n\nCurrent counter: " + ((InputEvent) event).getValue().toString() + " KWt");
-                    event.consume();
-                }
-            });
-        });
+        textField.addEventHandler(EventType.ROOT, event -> Platform.runLater(() -> {
+            if (event instanceof InputEvent) {
+                textField.setText("\n\nCurrent counter: " + ((InputEvent) event).getValue().toString() + " KWt");
+                event.consume();
+            }
+        }));
         return textField;
     }
 
     private static Text getPlannedCostsText() {
         Text textField = new Text();
         textField.setText("\n\nPlanned costs: ");
-        textField.addEventHandler(EventType.ROOT, event -> {
-            Platform.runLater(() -> {
-                if (event instanceof InputEvent) {
-                    textField.setText("\n\nPlanned costs: " + ((InputEvent) event).getValue().toString() + " UAH");
-                    event.consume();
-                }
-            });
-        });
+        textField.addEventHandler(EventType.ROOT, event -> Platform.runLater(() -> {
+            if (event instanceof InputEvent) {
+                textField.setText("\n\nPlanned costs: " + ((InputEvent) event).getValue().toString() + " UAH");
+                event.consume();
+            }
+        }));
         return textField;
     }
 
     private static Text getLeftOnAccountUahText() {
         Text textField = new Text();
         textField.setText("\n\nLeft on account: 5.0 UAH");
-        textField.addEventHandler(EventType.ROOT, event -> {
-            Platform.runLater(() -> {
-                if (event instanceof InputEvent) {
-                    textField.setText("\n\nLeft on account: " + ((InputEvent) event).getValue().toString() + " UAH");
-                    event.consume();
-                }
-            });
-        });
+        textField.addEventHandler(EventType.ROOT, event -> Platform.runLater(() -> {
+            if (event instanceof InputEvent) {
+                textField.setText("\n\nLeft on account: " + ((InputEvent) event).getValue().toString() + " UAH");
+                event.consume();
+            }
+        }));
         return textField;
     }
 
@@ -119,19 +127,17 @@ public class Main extends Application {
         iv1.setFitWidth(170);
         iv1.setPreserveRatio(true);
         iv1.setSmooth(true);
-        iv1.addEventHandler(EventType.ROOT, event -> {
-            Platform.runLater(() -> {
-                if (event instanceof InputEvent) {
-                    iv1.setImage(getImage(((InputEvent) event).getValue()));
-                    event.consume();
-                }
-            });
-        });
+        iv1.addEventHandler(EventType.ROOT, event -> Platform.runLater(() -> {
+            if (event instanceof InputEvent) {
+                iv1.setImage(getImage(((InputEvent) event).getValue()));
+                event.consume();
+            }
+        }));
         return iv1;
     }
 
     private static Image getImage(Float new_val) {
-        if (new_val.intValue() == 0) return new Image(Main.class.getResourceAsStream("/0.png"));
+        if (new_val.intValue() <= 0) return new Image(Main.class.getResourceAsStream("/0.png"));
         if (new_val.intValue() <= 25) return new Image(Main.class.getResourceAsStream("/25.png"));
         if (new_val.intValue() > 25 && new_val.intValue() <= 50)
             return new Image(Main.class.getResourceAsStream("/50.png"));
@@ -169,7 +175,7 @@ public class Main extends Application {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 4; i++) {
                 main.serialEvent();
                 try {
                     Thread.sleep(1000);

@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Enumeration;
 
 /**
@@ -25,7 +27,7 @@ public class SerialTest implements SerialPortEventListener {
     Text plannedCosts;
     Text leftOnAccountUah;
     BigDecimal initialCostInUah = BigDecimal.valueOf(5.0);
-    BigDecimal costPerKilowatt = BigDecimal.valueOf(0.5);
+    BigDecimal costPerKilowatt = BigDecimal.valueOf(0.67);
     BigDecimal currentCost = BigDecimal.ZERO;
 
     /**
@@ -149,8 +151,8 @@ public class SerialTest implements SerialPortEventListener {
     }
 
     private void changeTextLabels(Float currentCounter) {
-        currentCost = currentCost.add(costPerKilowatt.multiply(BigDecimal.valueOf(currentCounter)));
-        BigDecimal leftOnAccount = initialCostInUah.subtract(currentCost);
+        currentCost = currentCost.add(costPerKilowatt.multiply(BigDecimal.valueOf(currentCounter))).setScale(2, RoundingMode.CEILING);
+        BigDecimal leftOnAccount = initialCostInUah.subtract(currentCost).setScale(2, RoundingMode.CEILING);
 
         Event.fireEvent(batteryImage, new InputEvent((leftOnAccount.floatValue() * 100) / 5));
         Event.fireEvent(currentCounterText, new InputEvent(currentCounter));
