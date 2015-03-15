@@ -1,24 +1,18 @@
 package com.gmail.arduino;
 
-import com.gmail.ui.Controller;
-import com.gmail.ui.Main;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import javafx.event.Event;
-import javafx.event.EventTarget;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.Enumeration;
-import java.util.OptionalDouble;
-import java.util.Random;
 
 /**
  * Created by rayanral on 14/03/15.
@@ -26,8 +20,14 @@ import java.util.Random;
 public class SerialTest implements SerialPortEventListener {
 
     SerialPort serialPort;
-    ImageView imageView;
-    Text textField;
+    ImageView batteryImage;
+    Text currentCounterText;
+    Text plannedCosts;
+    Text leftOnAccountUah;
+    BigDecimal initialCostInUah = BigDecimal.valueOf(5.0);
+    BigDecimal costPerKilowatt = BigDecimal.valueOf(0.5);
+    BigDecimal currentCost = BigDecimal.ZERO;
+
     /**
      * The port we're normally going to use.
      */
@@ -56,9 +56,11 @@ public class SerialTest implements SerialPortEventListener {
      */
     private static final int DATA_RATE = 9600;
 
-    public SerialTest(ImageView imageView, Text textField) {
-        this.imageView = imageView;
-        this.textField = textField;
+    public SerialTest(ImageView imageView, Text currentCounterText, Text plannedCostsText, Text leftOnAccountUahText) {
+        this.batteryImage = imageView;
+        this.currentCounterText = currentCounterText;
+        this.plannedCosts = plannedCostsText;
+        this.leftOnAccountUah = leftOnAccountUahText;
     }
 
     public void initialize() {
@@ -134,17 +136,26 @@ public class SerialTest implements SerialPortEventListener {
     private void processInput() {
         try {
 //            String inputLine = input.readLine(); //2.45
-            String inputLine = "2.45";
+            String inputLine = "1.50";
             try {
                 Float currentCounter = Float.valueOf(inputLine);
-                Event.fireEvent(imageView, new InputEvent(currentCounter));
-                Event.fireEvent(textField, new InputEvent(currentCounter));
+                changeTextLabels(currentCounter);
                 System.out.println(currentCounter);
             } catch (NumberFormatException ignored) {
             }
         } catch (Exception e) {
             System.err.println(e.toString());
         }
+    }
+
+    private void changeTextLabels(Float currentCounter) {
+        currentCost = currentCost.add(costPerKilowatt.multiply(BigDecimal.valueOf(currentCounter)));
+        BigDecimal leftOnAccount = initialCostInUah.subtract(currentCost);
+
+        Event.fireEvent(batteryImage, new InputEvent((leftOnAccount.floatValue() * 100) / 5));
+        Event.fireEvent(currentCounterText, new InputEvent(currentCounter));
+        Event.fireEvent(plannedCosts, new InputEvent(currentCost.floatValue()));
+        Event.fireEvent(leftOnAccountUah, new InputEvent(leftOnAccount.floatValue()));
     }
 
 
