@@ -133,16 +133,15 @@ public class SerialTest implements SerialPortEventListener {
 
     private void processInput() {
         try {
-//            String inputLine = input.readLine();
-            float nextFloat = new Random().nextFloat();
-            System.out.println(nextFloat);
-//            String[] strings = inputLine.split(".");
-//            Float value = Float.valueOf(strings[0]);
-//            Float value = Float.valueOf(inputLine);
-            Event.fireEvent(imageView, new InputEvent(nextFloat * 100));
-            Event.fireEvent(textField, new InputEvent(nextFloat * 100));
-//            System.out.println(inputLine);
-//        } catch (IOException e) {
+//            String inputLine = input.readLine(); //2.45
+            String inputLine = "2.45";
+            try {
+                Float currentCounter = Float.valueOf(inputLine);
+                Event.fireEvent(imageView, new InputEvent(currentCounter));
+                Event.fireEvent(textField, new InputEvent(currentCounter));
+                System.out.println(currentCounter);
+            } catch (NumberFormatException ignored) {
+            }
         } catch (Exception e) {
             System.err.println(e.toString());
         }
