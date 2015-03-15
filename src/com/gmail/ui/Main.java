@@ -65,8 +65,8 @@ public class Main extends Application {
     private Tab createThirdPictureTab() {
         Tab imageTab = new Tab("Table");
 
-        ImageView imageView1 = new ImageView(new Image(Main.class.getResourceAsStream("/0.png")));
-        imageView1.setFitWidth(150);
+        ImageView imageView1 = new ImageView(new Image(Main.class.getResourceAsStream("/energyFull.png")));
+        imageView1.setFitWidth(500);
         imageView1.setPreserveRatio(true);
         imageView1.setSmooth(true);
 
