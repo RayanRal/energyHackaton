@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private static ImageView imageView = getImageView();
+    private static ImageView batteryImage = getBatteryImage();
     private static Text currentCounterTextField = getCurrentCounterText();
     private static Text plannedCostsText = getPlannedCostsText();
     private static Text leftOnAccountUahText = getLeftOnAccountUahText();
@@ -39,8 +39,9 @@ public class Main extends Application {
 
         Tab mainTab = new Tab("Main");
         Tab secondaryTableTab = createCheckboxTab();
+        Tab thirdPictureTab = createThirdPictureTab();
 
-        tabPane.getTabs().addAll(mainTab, secondaryTableTab);
+        tabPane.getTabs().addAll(mainTab, secondaryTableTab, thirdPictureTab);
         root.getChildren().add(borderPane);
 
         primaryStage.setTitle("MoneyMonitor");
@@ -52,13 +53,30 @@ public class Main extends Application {
         VBox textVerticalBox = new VBox();
         textVerticalBox.getChildren().addAll(currentCounterTextField, plannedCostsText, leftOnAccountUahText);
 
-        mainHorizontalBox.getChildren().addAll(imageView, textVerticalBox);
+        mainHorizontalBox.getChildren().addAll(batteryImage, textVerticalBox);
         mainTab.setContent(mainHorizontalBox);
 
         scene.setRoot(root);
         primaryStage.setScene(scene);
 
         primaryStage.show();
+    }
+
+    private Tab createThirdPictureTab() {
+        Tab imageTab = new Tab("Table");
+
+        ImageView imageView1 = new ImageView(new Image(Main.class.getResourceAsStream("/0.png")));
+        imageView1.setFitWidth(150);
+        imageView1.setPreserveRatio(true);
+        imageView1.setSmooth(true);
+
+        HBox imageBox = new HBox(5);
+
+        imageBox.setAlignment(Pos.CENTER);
+        imageBox.getChildren().add(imageView1);
+        imageTab.setContent(imageBox);
+
+        return imageTab;
     }
 
     private Tab createCheckboxTab() {
@@ -78,7 +96,6 @@ public class Main extends Application {
 
         horizontalCheckboxBox.getChildren().addAll(imageView1, imageView2);
         horizontalCheckboxBox.setAlignment(Pos.CENTER);
-
 
         horizontalCheckboxBox.getChildren().addAll(new CheckBox("Lower radiator\n temperature by 1°\n (6% economy)"));
         secondaryTableTab.setContent(horizontalCheckboxBox);
@@ -121,7 +138,7 @@ public class Main extends Application {
         return textField;
     }
 
-    private static ImageView getImageView() {
+    private static ImageView getBatteryImage() {
         ImageView iv1 = new ImageView();
         iv1.setImage(new Image(Main.class.getResourceAsStream("/100.png")));
         iv1.setFitWidth(170);
@@ -148,7 +165,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        SerialTest main = new SerialTest(imageView, currentCounterTextField, plannedCostsText, leftOnAccountUahText);
+        SerialTest main = new SerialTest(batteryImage, currentCounterTextField, plannedCostsText, leftOnAccountUahText);
         main.initialize();
         Thread t = new Thread() {
             public void run() {
